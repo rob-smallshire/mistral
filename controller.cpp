@@ -20,10 +20,7 @@ const float CABINET_ALPHA = 0.05;
 Controller::Controller(Max6651ClosedLoop* fan_a,
                        Max6651ClosedLoop* fan_b,
                        Iris* iris_a,
-                       Iris* iris_b,
-                       Thermometer* inside_thermometer,
-                       Thermometer* cabinet_thermometer,
-                       Thermometer* outside_thermometer) :
+                       Iris* iris_b) :
     both_fans_from_fan_a_state_(this),
     both_fans_from_fan_b_state_(this),
     fan_a_state_(this),
@@ -37,10 +34,7 @@ Controller::Controller(Max6651ClosedLoop* fan_a,
     default_iris_aperture_(openedAperture()),
     state_(&fan_a_state_),
     fans_(),
-    irises_(),
-    inside_thermometer_(inside_thermometer),
-    cabinet_thermometer_(cabinet_thermometer),
-    outside_thermometer_(outside_thermometer)
+    irises_()
 {
     fans_[0] = fan_a;
     fans_[1] = fan_b;
@@ -95,15 +89,10 @@ float Controller::transitionDelay() const {
     return 60.0; // seconds
 }
 
-void Controller::update()
+void Controller::update(float inside_celsius, float cabinet_celsius, float outside_celsius)
 {
-	float t_inside = inside_thermometer_->celsius();
-    float t_cabinet = cabinet_thermometer_->celsius();
-	float t_outside = outside_thermometer_->celsius();
-
-	float s_setpoint = setpointTemperature(t_inside, t_outside);
-
-	state_->update(s_setpoint, t_cabinet);
+	float s_setpoint = setpointTemperature(inside_celsius, outside_celsius);
+	state_->update(s_setpoint, cabinet_celsius);
 	State* next_state = findNextState(state_);
 	makeTransition(state_, next_state);
 	state_ = next_state;
