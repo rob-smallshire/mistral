@@ -29,18 +29,18 @@ void printkv(const String& key, const T & value) {
     Serial.println(value);
 }
 
-void setup()
-{
-	Serial.begin(9600);
-
-	pinMode(SLAVE_SELECT, OUTPUT);     // change this to 53 on a mega
-	digitalWrite(SLAVE_SELECT, HIGH);  // Disable W5100 Ethernet
-	if (!sd.begin(SD_CHIP_SELECT, SPI_HALF_SPEED)) sd.initErrorHalt();
-
-	Ethernet.begin(mac, ip);
-	Serial.println(F("Beginning server..."));
-	server.begin();
-}
+//void setup()
+//{
+//	Serial.begin(9600);
+//
+//	pinMode(SLAVE_SELECT, OUTPUT);     // change this to 53 on a mega
+//	digitalWrite(SLAVE_SELECT, HIGH);  // Disable W5100 Ethernet
+//	if (!sd.begin(SD_CHIP_SELECT, SPI_HALF_SPEED)) sd.initErrorHalt();
+//
+//	Ethernet.begin(mac, ip);
+//	Serial.println(F("Beginning server..."));
+//	server.begin();
+//}
 
 #define HTTP_BUFFER_SIZE 255
 
@@ -702,19 +702,19 @@ void handleRequest(EthernetClient & client, HttpMethod method, const String & ur
 	}
 }
 
-void loop()
-{
-    // listen for incoming clients
-    EthernetClient client = server.available();
-    if (client) {
-	    String url;
-	    String content_type;
-	    long content_length;
-	    HttpMethod method = readHttpRequest(client, /*out*/ url, /*out*/ content_type, /*out*/ content_length);
-		handleRequest(client, method, url, content_type, content_length);
-    }
-    // give the web browser time to receive the data
-    delay(1);
-    // close the connection:
-    client.stop();
-}
+//void loop()
+//{
+//    // listen for incoming clients
+//    EthernetClient client = server.available();
+//    if (client) {
+//	    String url;
+//	    String content_type;
+//	    long content_length;
+//	    HttpMethod method = readHttpRequest(client, /*out*/ url, /*out*/ content_type, /*out*/ content_length);
+//		handleRequest(client, method, url, content_type, content_length);
+//    }
+//    // give the web browser time to receive the data
+//    delay(1);
+//    // close the connection:
+//    client.stop();
+//}

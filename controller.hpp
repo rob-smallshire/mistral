@@ -19,6 +19,7 @@
 
 class Max6651ClosedLoop;
 class Iris;
+class Thermometer;
 
 class Controller
 {
@@ -26,7 +27,10 @@ public:
 	Controller(Max6651ClosedLoop* fan_a,
                Max6651ClosedLoop* fan_b,
                Iris* iris_a,
-               Iris* iris_b);
+               Iris* iris_b,
+               Thermometer* inside_thermometer,
+               Thermometer* cabinet_thermometer,
+               Thermometer* outside_thermometer);
     ~Controller();
 
 	void update();
@@ -70,11 +74,9 @@ private:
     Max6651ClosedLoop* fans_[2];
     Iris* irises_[2];
 
-    //Thermometer inside_thermometer;
-    //Thermometer outside_thermometer;
-    //Thermometer cabinet_thermometer;
-
-
+    Thermometer* inside_thermometer_;
+    Thermometer* cabinet_thermometer_;
+    Thermometer* outside_thermometer_;
 
 };
 

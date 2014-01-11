@@ -7,10 +7,7 @@
 
 #include <Arduino.h>
 
-#include <Max6651.h>
-
-#include "LinearActuator.hpp"
-#include "BothFansState.hpp"
+#include <state/bothfansstate.hpp>
 
 #include <controller.hpp>
 

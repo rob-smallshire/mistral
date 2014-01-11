@@ -17,19 +17,13 @@ const float INSIDE_ALPHA = 0.05;
 const float OUTSIDE_ALPHA = 0.05;
 const float CABINET_ALPHA = 0.05;
 
-namespace {
-
-	float smooth(float alpha, float previous_value, float new_value)
-	{
-	    return alpha * new_value + (1.0 - alpha) * previous_value;
-	}
-
-}
-
 Controller::Controller(Max6651ClosedLoop* fan_a,
                        Max6651ClosedLoop* fan_b,
                        Iris* iris_a,
-                       Iris* iris_b) :
+                       Iris* iris_b,
+                       Thermometer* inside_thermometer,
+                       Thermometer* cabinet_thermometer,
+                       Thermometer* outside_thermometer) :
     both_fans_from_fan_a_state_(this),
     both_fans_from_fan_b_state_(this),
     fan_a_state_(this),
@@ -43,13 +37,10 @@ Controller::Controller(Max6651ClosedLoop* fan_a,
     default_iris_aperture_(openedAperture()),
     state_(&fan_a_state_),
     fans_(),
-    irises_()
-    //inside_thermometer_(INSIDE_THERMOMETER_ADDRESS),
-    //outside_thermometer_(OUTSIDE_THERMOMETER_ADDRESS),
-    //cabinet_thermometer_(CABINET_THERMOMETER_ADDRESS),
-    //s_inside_(inside_thermometer.temperature()),
-    //s_outside_(outside_thermometer.temperature()),
-    //s_cabinet_(cabinet_thermometer.temperature())
+    irises_(),
+    inside_thermometer_(inside_thermometer),
+    cabinet_thermometer_(cabinet_thermometer),
+    outside_thermometer_(outside_thermometer)
 {
     fans_[0] = fan_a;
     fans_[1] = fan_b;
@@ -106,20 +97,16 @@ float Controller::transitionDelay() const {
 
 void Controller::update()
 {
-//	float t_inside = inside_thermometer.temperature();
-//	float t_outside = outside_thermometer.temperature();
-//	float t_cabinet = cabinet_thermometer.temperature();
-//
-//	s_inside = smooth(INSIDE_ALPHA, s_inside, t_inside);
-//	s_outside = smooth(OUTSIDE_ALPHA, s_outside, t_inside);
-//	s_cabinet = smooth(CABINET_ALPHA, s_cabinet, t_cabinet);
-//
-//	float s_setpoint = setpointTemperature(s_inside, s_outside);
-//
-//	state_->update(s_setpoint, s_cabinet);
-//	State* next_state = findNextState(state_);
-//	makeTransition(state_, next_state);
-//	state_ = next_state;
+	float t_inside = inside_thermometer_->celsius();
+    float t_cabinet = cabinet_thermometer_->celsius();
+	float t_outside = outside_thermometer_->celsius();
+
+	float s_setpoint = setpointTemperature(t_inside, t_outside);
+
+	state_->update(s_setpoint, t_cabinet);
+	State* next_state = findNextState(state_);
+	makeTransition(state_, next_state);
+	state_ = next_state;
 }
 
 
