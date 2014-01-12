@@ -36,6 +36,9 @@ BothFansState::BothFansState(Controller* ctxt) :
 {
 }
 
+BothFansState::~BothFansState() {
+}
+
 bool BothFansState::isUntenableHigher() const
 {
 	return false;
@@ -48,11 +51,13 @@ bool BothFansState::isUntenableLower() const
 
 void BothFansState::enter(State* previous_state)
 {
-	pid_.setOutput(context().totalActualFanSpeed() / 2.0);
+    pid_.setOutput(context().totalActualFanSpeed() / 2.0f);
+    context().runFan(VENT_A);
+    context().runFan(VENT_B);
 	context().targetFanSpeed(VENT_A, pid_.output());
 	context().targetFanSpeed(VENT_B, pid_.output());
-	context().targetAperture(VENT_A, APERTURE_OPEN);
-	context().targetAperture(VENT_B, APERTURE_OPEN);
+	context().targetAperture(VENT_A, context().openedAperture());
+	context().targetAperture(VENT_B, context().openedAperture());
 }
 
 void BothFansState::exit(State* next_state)
@@ -65,5 +70,8 @@ void BothFansState::update(float setpoint_temperature, float cabinet_temperature
 	float rpm = pid_.update(cabinet_temperature);
 	context().targetFanSpeed(VENT_A, rpm);
 	context().targetFanSpeed(VENT_B, rpm);
+	Serial.print(name());
+	Serial.print(" : Setting both fans to ");
+	Serial.println(rpm);
 }
 

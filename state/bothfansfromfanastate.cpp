@@ -18,3 +18,7 @@ State* BothFansFromFanAState::transitionHigher() {
 State* BothFansFromFanAState::transitionLower() {
     return &(context().fan_b_state_);
 }
+
+const char * BothFansFromFanAState::name() {
+    return "BothFansFromFanAState";
+}

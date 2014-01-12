@@ -25,5 +25,7 @@ State* BothFansFromFanBState::transitionLower() {
     return &(context().fan_a_state_);
 }
 
-
+const char * BothFansFromFanBState::name() {
+    return "BothFansFromFanBState";
+}
 

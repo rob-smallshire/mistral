@@ -18,6 +18,7 @@ public:
     virtual ~FanBState();
     virtual State* transitionLower();
     virtual State* transitionHigher();
+    virtual const char* name();
 };
 
 #endif /* FANBSTATE_HPP_ */

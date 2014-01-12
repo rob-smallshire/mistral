@@ -31,5 +31,3 @@ void reportTemperatures() {
 	Serial.print("inside temperature = ");
 	Serial.println(insideCelsiusTemperature);
 }
-
-

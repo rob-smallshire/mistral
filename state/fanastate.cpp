@@ -23,3 +23,7 @@ State* FanAState::transitionLower() {
 State* FanAState::transitionHigher() {
     return &(context().both_fans_from_fan_a_state_);
 }
+
+const char * FanAState::name() {
+    return "FanAState";
+}

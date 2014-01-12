@@ -17,7 +17,7 @@ public:
 
     State* transitionHigher();
     State* transitionLower();
-
+    virtual const char* name();
 };
 
 

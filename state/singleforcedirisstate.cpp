@@ -5,6 +5,8 @@
  *      Author: rjs
  */
 
+#include <Arduino.h>
+
 #include <controller.hpp>
 
 #include <state/singleforcedirisstate.hpp>
@@ -32,10 +34,11 @@ bool SingleForcedIrisState::isUntenableHigher() const {
 }
 
 void SingleForcedIrisState::enter(State* previous_state) {
-    context().targetFanSpeed(active_, context().minimumFanSpeed());
-    context().targetFanSpeed(dormant_, 0);
-    context().targetAperture(dormant_, context().closedAperture());
     pid_.setOutput(context().actualAperture(active_));
+    context().runFan(active_);
+    context().targetFanSpeed(active_, context().minimumFanSpeed());
+    context().stopFan(dormant_);
+    context().targetAperture(dormant_, context().closedAperture());
 }
 
 void SingleForcedIrisState::exit(State* next_state) {
@@ -45,4 +48,9 @@ void SingleForcedIrisState::update(float setpoint_temperature, float cabinet_tem
     pid_.setSetpoint(setpoint_temperature);
     int aperture = pid_.update(cabinet_temperature);
     context().targetAperture(active_, aperture);
+    Serial.print(name());
+    Serial.print(" : Setting iris ");
+    Serial.print(active_ == VENT_A ? 'A' : 'B');
+    Serial.print(" to ");
+    Serial.println(aperture);
 }

@@ -17,8 +17,8 @@ public:
 
     virtual bool isUntenableHigher() const;
     virtual bool isUntenableLower() const;
-    virtual State* transitionLower();
-    virtual State* transitionHigher();
+    virtual State* transitionLower() = 0;
+    virtual State* transitionHigher() = 0;
     virtual void enter(State* previous_state);
     virtual void exit(State* next_state);
     virtual void update(float setpoint_temperature, float cabinet_temperature);

@@ -62,25 +62,25 @@ void moveIrisB() {
     moveIris(IRIS_SERVO_B);
 }
 
-void setup() {
-    Serial.begin(9600);
-    Serial.println("Initializing actuators");
-
-    I2c.begin();
-    I2c.timeOut(100);
-    // configure the actuators
-    I2c.write(SERVO_CONTROLLER_ADDRESS, SERVO_CONFIG_REGISTER, SERVO_STANDARD_MODE);
-    I2c.write(SERVO_CONTROLLER_ADDRESS, IRIS_SERVO_A, SERVO_POSITION_MIN);
-    I2c.write(SERVO_CONTROLLER_ADDRESS, IRIS_SERVO_B, SERVO_POSITION_MIN);
-
-    Serial.println("Initializing analogue");
-    analogReference(EXTERNAL);
-
-    sCmd.addCommand("A",     moveIrisA);  // Converts two arguments to integers and echos them back
-    sCmd.addCommand("B",     moveIrisB);  // Converts two arguments to integers and echos them back
-    sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
-    Serial.println("Ready");
-}
+//void setup() {
+//    Serial.begin(9600);
+//    Serial.println("Initializing actuators");
+//
+//    I2c.begin();
+//    I2c.timeOut(100);
+//    // configure the actuators
+//    I2c.write(SERVO_CONTROLLER_ADDRESS, SERVO_CONFIG_REGISTER, SERVO_STANDARD_MODE);
+//    I2c.write(SERVO_CONTROLLER_ADDRESS, IRIS_SERVO_A, SERVO_POSITION_MIN);
+//    I2c.write(SERVO_CONTROLLER_ADDRESS, IRIS_SERVO_B, SERVO_POSITION_MIN);
+//
+//    Serial.println("Initializing analogue");
+//    analogReference(EXTERNAL);
+//
+//    sCmd.addCommand("A",     moveIrisA);  // Converts two arguments to integers and echos them back
+//    sCmd.addCommand("B",     moveIrisB);  // Converts two arguments to integers and echos them back
+//    sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
+//    Serial.println("Ready");
+//}
 
 void commandIrisPosition(IrisServoId iris_id, int position) {
     if (position < 0 || position > 255) {

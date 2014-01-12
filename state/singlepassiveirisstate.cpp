@@ -8,14 +8,16 @@
 #ifndef SINGLEPASSIVEIRISSTATE_CPP_
 #define SINGLEPASSIVEIRISSTATE_CPP_
 
+#include <Arduino.h>
+
 #include <controller.hpp>
 
 #include <state/singlepassiveirisstate.hpp>
 
 SinglePassiveIrisState::SinglePassiveIrisState(Controller* ctxt, Vent active, Vent dormant) :
     State(ctxt),
-    active_(active_),
-    dormant_(dormant_),
+    active_(active),
+    dormant_(dormant),
     pid_(context().defaultSetpointCelsius(),
          context().defaultIrisAperture(),
          4.0, 1.0, 0.0,
@@ -26,10 +28,10 @@ SinglePassiveIrisState::~SinglePassiveIrisState() {
 }
 
 void SinglePassiveIrisState::enter(State* previous_state) {
-    context().targetFanSpeed(active_, 0);
-    context().targetFanSpeed(dormant_, 0);
-    context().targetAperture(dormant_, context().closedAperture());
     pid_.setOutput(context().actualAperture(active_));
+    context().stopFan(active_);
+    context().stopFan(dormant_);
+    context().targetAperture(dormant_, context().closedAperture());
 }
 
 void SinglePassiveIrisState::exit(State* previous_state) {
@@ -47,6 +49,11 @@ void SinglePassiveIrisState::update(float setpoint_temperature, float cabinet_te
     pid_.setSetpoint(setpoint_temperature);
     int aperture = pid_.update(cabinet_temperature);
     context().targetAperture(active_, aperture);
+    Serial.print(name());
+    Serial.print(" : Setting iris ");
+    Serial.print(active_ == VENT_A ? 'A' : 'B');
+    Serial.print(" to ");
+    Serial.println(aperture);
 }
 
 #endif /* SINGLEPASSIVEIRISSTATE_CPP_ */

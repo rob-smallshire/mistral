@@ -19,6 +19,7 @@ public:
     virtual ~FanAState();
     virtual State* transitionLower();
     virtual State* transitionHigher();
+    virtual const char* name();
 };
 
 #endif /* FANASTATE_HPP_ */

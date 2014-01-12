@@ -11,6 +11,8 @@ State::State(Controller* ctxt) :
     context_(ctxt) {
 }
 
+State::~State() {
+}
 
 Controller& State::context() const {
     return *context_;

@@ -13,10 +13,17 @@ PassiveIrisBState::PassiveIrisBState(Controller* ctxt) :
    SinglePassiveIrisState(ctxt, VENT_B, VENT_A) {
 }
 
+PassiveIrisBState::~PassiveIrisBState() {
+}
+
 State* PassiveIrisBState::transitionHigher() {
     return &(context().forced_iris_a_state_);
 }
 
 State* PassiveIrisBState::transitionLower() {
     return this;
+}
+
+const char * PassiveIrisBState::name() {
+    return "PassiveIrisBState";
 }

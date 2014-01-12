@@ -30,11 +30,15 @@ public:
                Iris* iris_b);
     ~Controller();
 
+    void begin();
+
 	void update(float inside_celsius, float cabinet_celsius, float outside_celsius);
 
 	int minimumFanSpeed();
 	int maximumFanSpeed();
 	int totalActualFanSpeed();
+	void runFan(Vent vent);
+	void stopFan(Vent vent);
 	void targetFanSpeed(Vent vent, int rpm);
 
 	int openedAperture();
@@ -60,7 +64,7 @@ public:
 private:
 	State* findNextState(State* state) const;
 	void makeTransition(State* previous_state, State* next_state) const;
-	float setpointTemperature(float inside, float outside);
+	float setpointTemperature(float inside_celsius, float outside_celsius);
 
     float default_setpoint_celsius_;
     int default_fan_rpm_;

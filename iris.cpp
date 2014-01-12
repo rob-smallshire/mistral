@@ -9,6 +9,16 @@
 
 #include <iris.hpp>
 
+
+
+int Iris::openedAperture() {
+    return 0;
+}
+
+int Iris::closedAperture() {
+    return 255;
+}
+
 Iris::Iris(uint8_t servo_controller_address, uint8_t servo_id, uint8_t analog_pin) :
     servo_controller_address_(servo_controller_address),
     servo_id_(servo_id),
@@ -23,6 +33,6 @@ void Iris::targetAperture(int aperture) {
 }
 
 int Iris::actualAperture() {
-    return (closedAperture() - openedAperture()) * (analogRead(analog_pin_) / 1023.0f) + openedAperture();
+    return 255 - ((closedAperture() - openedAperture()) * (analogRead(analog_pin_) / 1023.0f) + openedAperture());
 }
 

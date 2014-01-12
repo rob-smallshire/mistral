@@ -1,12 +1,8 @@
 #include <math.h>
 
-#include "pid.hpp"
+#include <Arduino.h>
 
-namespace {
-    //const long int raw = 0x7fc00000;
-    //const float NaN = *(reinterpret_cast<float*>(&raw));
-    float seconds();
-}
+#include <pid.hpp>
 
 PidController::PidController(float setpoint, float initial_output,
                              float kp, float ki, float kd,
@@ -23,14 +19,15 @@ PidController::PidController(float setpoint, float initial_output,
 
 void PidController::reset(float initial_output)
 {
-    then_ = NAN;
+    then_ = millis();
     previous_process_value_ = NAN;
     error_ = 0.0f;
     previous_error_ = NAN;
     p_ = 0.0f;
     i_ = initial_output;
     d_ = 0.0f;
-    clamped_since_ = NAN;
+    clamped_since_ = 0;
+    clamped_ = false;
 
     if (i_ > output_max_)
     {
@@ -45,16 +42,16 @@ void PidController::reset(float initial_output)
     previous_output_ = i_;
 }
 
+
 float PidController::next_period()
 {
-    float now = seconds();
-    if (isnan(then_))
-    {
-        then_ = now - 1.0;
-    }
-    float dt = now - then_;
+    unsigned long now = millis();
+    unsigned long dt = now - then_;
     then_ = now;
-    return dt;
+    if (dt == 0) {
+        dt = 1; // Always at least one millisecond
+    }
+    return dt / 1000.0f;
 }
 
 float PidController::update(float process_value)
@@ -73,13 +70,26 @@ float PidController::update(float process_value)
 
     float output = p_ + i_ + d_;
 
+    Serial.print("dt = ");
+    Serial.print(dt);
+    Serial.print("error_ = ");
+    Serial.print(error_);
+    Serial.print(", p_ = ");
+    Serial.print(p_);
+    Serial.print(", i_ = ");
+    Serial.print(i_);
+    Serial.print(", d_ = ");
+    Serial.print(d_);
+    Serial.println();
+
     if (output > output_max_)
     {
         i_ -= output - output_max_;
         output = output_max_;
         if (isnan(clamped_since_))
         {
-            clamped_since_ = seconds();
+            clamped_since_ = millis();
+            clamped_ = true;
         }
     }
     else if (output < output_min_)
@@ -88,12 +98,13 @@ float PidController::update(float process_value)
         output = output_min_;
         if (isnan(clamped_since_))
         {
-            clamped_since_ = seconds();
+            clamped_since_ = millis();
+            clamped_ = true;
         }
     }
     else
     {
-        clamped_since_ = NAN;
+        clamped_ = false;
     }
 
     previous_output_ = output;
@@ -164,6 +175,6 @@ float PidController::outputMaximum() const
 
 float PidController::clampedDuration() const
 {
-    return isnan(clamped_since_) ? 0.0f : seconds() - clamped_since_;
+    return clamped_ ? 0.0f : (millis() - clamped_since_) / 1000.0f;
 }
 

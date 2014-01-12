@@ -23,6 +23,7 @@ public:
 	virtual void enter(State* previous_state) = 0;
 	virtual void exit(State* next_state) = 0;
 	virtual void update(float setpoint_temperature, float cabinet_temperature) = 0;
+	virtual const char* name() = 0;
 protected:
 	Controller& context() const;
 private:

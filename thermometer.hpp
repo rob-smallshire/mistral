@@ -13,15 +13,19 @@
 
 class Thermometer {
 public:
-    Thermometer(DallasTemperature & sensors, DeviceAddress address, float alpha=1.0);
+    Thermometer(DallasTemperature & sensors, uint8_t* address, float alpha=1.0, const char* name="");
+    void setResolution(uint8_t resolution);
     float celsius();
+    bool isError(float value);
 private:
     float rawCelsius();
+    void reportError(float new_value);
 
     DallasTemperature* sensors_;
     uint8_t* address_;
     float smoothed_;
     float alpha_;
+    const char* name_;
 };
 
 

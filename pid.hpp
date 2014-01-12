@@ -48,15 +48,16 @@ private:
     float setpoint_;
     float output_min_;
     float output_max_;
-    float then_;
+    unsigned long then_;
     float previous_process_value_;
     float error_;
     float previous_error_;
     float p_;
     float i_;
     float d_;
-    float clamped_since_;
+    unsigned long clamped_since_;
     float previous_output_;
+    bool clamped_;
 };
 
 #endif /* PID_CONTROLLER_HPP_ */
